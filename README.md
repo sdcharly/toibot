@@ -18,10 +18,6 @@ This project is intended as a starting point for inexperienced users looking to 
 - **Markdown Support**:  Responses are displayed with Markdown formatting to improve readability and presentation.
 - **Security**: Employs the Flowise API key to ensure continuous chatbot security.
 
-## Disclaimer
-
-This project is intended as a starting point for inexperienced users looking to explore and learn about the Flowise SDK. It provides a basic foundation for building applications using the SDK but is not intended for production use and will not be actively maintained. Users are encouraged to fork the project and adapt it to their specific needs and use cases. Please note that ongoing support or updates should not be expected.
-
 ## Prerequisites
 
 - An active [Flowise workflow](https://github.com/FlowiseAI/Flowise) and Flowise API key
