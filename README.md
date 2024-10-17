@@ -2,6 +2,8 @@
 
 ToiBot is a chatbot application developed using Node.js and the Flowise SDK. It offers a web interface for users to interact with a chatbot that processes questions and provides responses in real-time. The application uses Flowise's API to deliver intelligent and context-aware responses.
 
+![capture_241017_020807](https://github.com/user-attachments/assets/813b363b-44bf-4491-ae67-b62460647d42)
+
 ## Features
 
 - **Real-time Chat Interface**: Interact with the chatbot in real-time with a user-friendly experience.
