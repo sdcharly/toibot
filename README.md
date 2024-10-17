@@ -1,19 +1,24 @@
 # ToiBot Chatbot
 
-ToiBot is a chatbot application developed using Node.js and the Flowise SDK. It offers a web interface for users to interact with a chatbot that processes questions and provides responses in real-time. The application uses Flowise's API to deliver intelligent and context-aware responses.
+ToiBot is a chatbot application built with Node.js and the [Flowise SDK](https://www.npmjs.com/package/flowise-sdk). It provides a web interface that enables users to interact with their Flowise workflows.
 
 ## Features
 
-- **Real-time Chat Interface**: Interact with the chatbot in real-time with a user-friendly experience.
-- **Event-Streaming**: Receive updates as the chatbot processes queries.
+- **Real-time Chat Interface**: Engage with Flowise workflows in real time through a user-friendly interface.
+- **Streaming**:  Receive responses in a continuous stream, providing a more natural and engaging conversational experience.
 - **Follow-up Prompts**: Suggest follow-up questions to enhance user engagement.
-- **Session Management**: Maintain context across interactions using session IDs.
-- **Responsive Design**: Consistent experience across various devices.
-- **Markdown Support**: Display responses with Markdown formatting for improved readability and presentation.
-- **Security**: Utilize the Flowise API key to ensure the chatbot remains secure at all times.
+- **Session Management**: Preserve context throughout interactions by utilizing session IDs.
+- **Responsive Design**: Adapts to all screen sizes.
+- **Markdown Support**:  Responses are displayed with Markdown formatting to improve readability and presentation.
+- **Security**: Employs the Flowise API key to ensure continuous chatbot security.
+
+## Disclaimer
+
+This project is intended as a starting point for inexperienced users looking to explore and learn about the Flowise SDK. It provides a basic foundation for building applications using the SDK but is not intended for production use and will not be actively maintained. Users are encouraged to fork the project and adapt it to their specific needs and use cases. Please note that ongoing support or updates should not be expected.
 
 ## Prerequisites
 
+- An active [Flowise workflow](https://github.com/FlowiseAI/Flowise) and Flowise API key
 - Node.js (version 14 or higher)
 - npm (Node Package Manager)
 
@@ -54,7 +59,7 @@ The application uses a `.env` file to manage sensitive information such as API k
 
 ## Flowise SDK Integration
 
-The ToiBot chatbot uses the Flowise SDK to interact with the Flowise API. This integration enables the chatbot to process natural language queries and provide intelligent responses. The SDK manages communication with the Flowise API, including session IDs to maintain context across multiple interactions.
+The ToiBot chatbot uses the Flowise SDK to interact with the Flowise API. The SDK manages communication with the Flowise API, including session IDs to maintain context across multiple interactions.
 
 ### Session ID Feature
 
@@ -77,4 +82,4 @@ The session ID feature is essential for maintaining context in conversations. Ea
 
 ## License
 
-This project is licensed under the ISC License.
+This project is licensed under the ISC License. Use it as you see fit.

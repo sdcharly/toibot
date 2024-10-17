@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "toi500",
   "license": "ISC",
-  "description": "",
+  "description": "ToiBot is a chatbot application built with Node.js and the Flowise SDK. It provides a web interface that enables users to interact with their Flowise workflows.",
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
