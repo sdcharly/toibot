@@ -2,9 +2,11 @@
 
 ToiBot is a chatbot application built with Node.js and the [Flowise SDK](https://www.npmjs.com/package/flowise-sdk). It provides a web interface that enables users to interact with their Flowise workflows.
 
-![capture_241017_020807](https://github.com/user-attachments/assets/813b363b-44bf-4491-ae67-b62460647d42)
+https://github.com/user-attachments/assets/62676708-778e-42e9-8224-a88c015a73e6
 
-**Disclaimer**: This project is intended as a starting point for inexperienced users looking to explore and learn about the Flowise SDK. It provides a basic foundation for building applications using the SDK but is not intended for production use and will not be actively maintained. Users are encouraged to fork the project and adapt it to their specific needs and use cases. Please note that ongoing support or updates should not be expected.
+## Disclaimer
+
+This project is intended as a starting point for inexperienced users looking to explore and learn about the Flowise SDK. It provides a basic foundation for building applications using the SDK but is not intended for production use and will not be actively maintained. Users are encouraged to fork the project and adapt it to their specific needs and use cases. Please note that ongoing support or updates should not be expected.
 
 ## Features
 
@@ -65,9 +67,16 @@ The application uses a `.env` file to manage sensitive information such as API k
 
 The ToiBot chatbot uses the Flowise SDK to interact with the Flowise API. The SDK manages communication with the Flowise API, including session IDs to maintain context across multiple interactions.
 
-### Session ID Feature
+## Session ID Feature
 
 The session ID feature is essential for maintaining context in conversations. Each session is identified by a unique session ID, allowing the chatbot to remember previous interactions and provide more relevant responses. This feature is particularly useful for applications requiring continuity in user interactions.
+
+## Monitoring
+
+You can monitor the chatbot's data flow directly in the terminal. When you start the server, the terminal will display real-time logs of the interactions, including received chunks and metadata. This feature helps in debugging and understanding the chatbot's behavior during conversations.
+
+![image](https://github.com/user-attachments/assets/e5823699-2f5a-42ca-a7d4-f5e41e66f06d)
+
 
 ## Project Structure
 
@@ -86,4 +95,4 @@ The session ID feature is essential for maintaining context in conversations. Ea
 
 ## License
 
-This project is licensed under the ISC License. Use it as you see fit.
+This project is licensed under the [ISC License](https://opensource.org/license/isc-license-txt). Use it as you see fit.

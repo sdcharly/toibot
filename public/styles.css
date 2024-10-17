@@ -205,11 +205,9 @@ h1 {
   background-color: var(--bot-message-bg);
   color: var(--bot-message-color);
   align-self: flex-start;
-  border-bottom-left-radius: 4px;
   max-width: 80%;
   margin-bottom: 15px;
   padding: 12px 16px;
-  border-radius: 18px;
   font-size: 1rem;
   line-height: 1.4;
   word-wrap: break-word;
