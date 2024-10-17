@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
+</head>
+<body>
+  <div class="chat-container">
+    <h1>Chatbot</h1>
+    <div id="chat-window"></div>
+    <div id="follow-up-prompts-container"></div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="Type your message here...">
+      <button onclick="sendMessage()" id="send-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256" stroke="currentColor" stroke-width="8" fill="none">
+          <path d="M229.89,117.43l-168-95.88A12,12,0,0,0,44.7,36l31.08,92L44.71,220A12,12,0,0,0,56,236a12.13,12.13,0,0,0,5.93-1.57l167.94-96.08a12,12,0,0,0,0-20.92Zm-4,14L58,227.47a4,4,0,0,1-5.72-4.83l0-.07L82.87,132H144a4,4,0,0,0,0-8H82.87L52.26,33.37A3.89,3.89,0,0,1,53.44,29,4.13,4.13,0,0,1,56,28a3.88,3.88,0,0,1,1.93.54l168,95.87a4,4,0,0,1,0,7Z"></path>
+        </svg>
+        <div class="spinner" style="display: none;"></div>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById('chat-window');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const buttonText = sendButton.querySelector('.button-text');
+    const spinner = sendButton.querySelector('.spinner');
+
+    function setButtonLoading(isLoading) {
+      const sendButton = document.getElementById('send-button');
+      const spinner = sendButton.querySelector('.spinner');
+      const icon = sendButton.querySelector('svg');
+      
+      sendButton.disabled = isLoading;
+      spinner.style.display = isLoading ? 'block' : 'none';
+      icon.style.display = isLoading ? 'none' : 'block';
+    }
+
+    function addMessage(sender, message) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      
+      if (sender === 'bot') {
+        messageDiv.innerHTML = `
+          <div class="message-content"></div>
+          <div class="thinking">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        `;
+        if (message) {
+          messageDiv.querySelector('.message-content').innerHTML = DOMPurify.sanitize(marked.parse(message));
+        }
+      } else {
+        messageDiv.textContent = message;
+      }
+      
+      chatWindow.appendChild(messageDiv);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function showThinkingAnimation() {
+      const lastBotMessage = document.querySelector('.message.bot:last-child');
+      if (lastBotMessage) {
+        const thinkingDiv = lastBotMessage.querySelector('.thinking');
+        if (thinkingDiv) {
+          thinkingDiv.style.display = 'flex';
+        }
+      } else {
+        addMessage('bot', '');
+        showThinkingAnimation();
+      }
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function hideThinkingAnimation() {
+      const lastBotMessage = document.querySelector('.message.bot:last-child');
+      if (lastBotMessage) {
+        const thinkingDiv = lastBotMessage.querySelector('.thinking');
+        if (thinkingDiv) {
+          thinkingDiv.style.display = 'none';
+        }
+      }
+    }
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (message) {
+        addMessage('user', message);
+        userInput.value = '';
+        setButtonLoading(true);
+        showThinkingAnimation();
+
+        try {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ question: message }),
+          });
+
+          if (response.ok) {
+            const reader = response.body.getReader();
+            let botMessage = '';
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              const chunk = new TextDecoder().decode(value);
+              const lines = chunk.split('\n');
+              for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                  const data = JSON.parse(line.slice(5));
+                  if (data.type === 'token') {
+                    if (botMessage === '') {
+                      hideThinkingAnimation();
+                    }
+                    botMessage += data.content;
+                    updateBotMessage(botMessage);
+                  } else if (data.type === 'metadata') {
+                    displayFollowUpPrompts(data.content.followUpPrompts);
+                  }
+                }
+              }
+            }
+          } else {
+            hideThinkingAnimation();
+            addMessage('bot', 'Sorry, there was an error processing your request.');
+          }
+        } catch (error) {
+          hideThinkingAnimation();
+          console.error('Error:', error);
+          addMessage('bot', 'Sorry, there was an error processing your request.');
+        } finally {
+          setButtonLoading(false);
+        }
+      }
+    }
+
+    function updateBotMessage(message) {
+      const lastBotMessage = document.querySelector('.message.bot:last-child');
+      if (lastBotMessage) {
+        const messageContent = lastBotMessage.querySelector('.message-content');
+        if (messageContent) {
+          messageContent.innerHTML = DOMPurify.sanitize(marked.parse(message));
+        }
+        const thinkingDiv = lastBotMessage.querySelector('.thinking');
+        if (thinkingDiv) {
+          thinkingDiv.style.display = 'none';
+        }
+      }
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function displayFollowUpPrompts(prompts) {
+      const promptsContainer = document.getElementById('follow-up-prompts-container');
+      promptsContainer.innerHTML = '';
+      
+      if (prompts.length > 0) {
+        const promptsDiv = document.createElement('div');
+        promptsDiv.className = 'follow-up-prompts';
+        prompts.forEach(prompt => {
+          const promptButton = document.createElement('button');
+          promptButton.textContent = prompt;
+          promptButton.addEventListener('click', () => {
+            userInput.value = prompt;
+            sendMessage();
+          });
+          promptsDiv.appendChild(promptButton);
+        });
+        promptsContainer.appendChild(promptsDiv);
+      }
+    }
+
+    userInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
