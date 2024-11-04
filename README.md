@@ -2,7 +2,7 @@
 
 ToiBot is a chatbot application built with Node.js and powered by [Flowise SDK](https://www.npmjs.com/package/flowise-sdk). It provides a functional and customizable chatbot web interface that enables users to interact with their Flowise workflows.
 
-https://github.com/user-attachments/assets/569bd8c5-a5f7-499f-921c-54d4c18e7ae7
+https://github.com/user-attachments/assets/f48f6434-a2dc-4aa1-b218-e1622079b760
 
 New on Flowise? Check out [FlowiseAI](https://flowiseai.com) to get started.
 
@@ -149,7 +149,7 @@ The chatbot now automatically adapts to your Flowise chatflow configuration:
 
 ### API Protection Layer
 
-![capture_241104_125527](https://github.com/user-attachments/assets/53b6bf61-2257-4c5b-aa3c-42805ca42291)
+![capture](https://github.com/user-attachments/assets/9e5a177f-3a7a-4bd6-91b3-e43f59c7b7a4)
 
 ToiBot implements a robust security architecture to protect sensitive information and prevent direct exposure of your Flowise infrastructure:
 
