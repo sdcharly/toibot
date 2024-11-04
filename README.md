@@ -1,30 +1,43 @@
 # ToiBot Chatbot
 
-ToiBot is a chatbot application built with Node.js and the [Flowise SDK](https://www.npmjs.com/package/flowise-sdk). It provides a web interface that enables users to interact with their Flowise workflows.
+ToiBot is a chatbot application built with Node.js and powered by [Flowise SDK](https://www.npmjs.com/package/flowise-sdk). It provides a functional and customizable chatbot web interface that enables users to interact with their Flowise workflows.
 
-https://github.com/user-attachments/assets/62676708-778e-42e9-8224-a88c015a73e6
+https://github.com/user-attachments/assets/569bd8c5-a5f7-499f-921c-54d4c18e7ae7
 
-## Disclaimer
+New on Flowise? Check out [FlowiseAI](https://flowiseai.com) to get started.
 
-This project is intended as a starting point for inexperienced users looking to explore and learn about the Flowise SDK. It provides a basic foundation for building applications using the SDK but is not intended for production use and will not be actively maintained. Users are encouraged to fork the project and adapt it to their specific needs and use cases. Please note that ongoing support or updates should not be expected.
+##  🚀 Features
 
-## Features
-
-- **Real-time Chat Interface**: Engage with Flowise workflows in real time through a user-friendly interface.
-- **Streaming**:  Receive responses in a continuous stream, providing a more natural and engaging conversational experience.
+- **Real-time Chat Interface**: Engage with your Flowise flows in real time through a user-friendly interface.
+- **Streaming**: Receive responses in a continuous stream, providing a more natural and engaging conversational experience.
 - **Follow-up Prompts**: Suggest follow-up questions to enhance user engagement.
+- **File Upload Support**: Upload and process various file types including TXT, PDF, DOC, DOCX, CSV, JSON, and XML.
+- **Image Upload Support**: Upload and process image files with preview functionality.
+- **Image Display**: The chatbot can display images received in the conversation.
+- **Attachment Preview**: Shows thumbnails for uploaded images and file information for documents.
+- **File Size Limits**: Enforces configurable size limits based on Flowise settings.
+- **Drag-and-Drop Functionality**: Supports drag-and-drop for uploading files and images.
+- **AI Message Copying**: Users can easily copy AI-generated messages.
+- **Dynamic Upload Controls**: Shows/hides upload buttons based on Flowise configuration.
 - **Session Management**: Preserve context throughout interactions by utilizing session IDs.
-- **Responsive Design**: Adapts to all screen sizes.
-- **Markdown Support**:  Responses are displayed with Markdown formatting to improve readability and presentation.
+- **Chat History**: Maintains conversation history across sessions using local storage.
+- **Reset Functionality**: Allows users to start fresh conversations.
+- **Auto-growing Input**: The chat input field automatically expands as you type, providing a comfortable writing experience while maintaining a clean interface.
+- **Boxed/Full Screen Mode**: Allows users to switch between a boxed chat interface and a fullscreen experience.
+- **Customizable Welcome Message**: Allows defining a personalized welcome message to greet users upon entering the chat.
+- **Visual Feedback**: Displays loading animations and progress indicators during operations.
+- **Markdown Support**: Responses are displayed with Markdown formatting to improve readability and presentation.
+- **API Proxy**: The proxy ensures that sensitive information like your API host and chatflow ID are never exposed to the client-side code.
 - **Security**: Employs the Flowise API key to ensure continuous chatbot security.
+- **Embed Feature**: Easily embed the chatbot on any webpage with a simple script tag.
 
-## Prerequisites
+## 📋 Prerequisites 
 
-- An active [Flowise workflow](https://github.com/FlowiseAI/Flowise) and Flowise API key
+- An active [Flowise workflow](https://github.com/FlowiseAI/Flowise) and Flowise API key (free!).
 - Node.js (version 14 or higher)
 - npm (Node Package Manager)
 
-## Installation
+## 🛠️ Installation 
 
 1. Clone the repository:
 
@@ -50,45 +63,123 @@ This project is intended as a starting point for inexperienced users looking to 
 4. Start the server:
 
    ```bash
-   npm start
+   npm start # or
+   npm run dev
    ```
 
 5. Open a web browser and navigate to `http://localhost:3000` to interact with the chatbot.
 
-## Environment Variables
+## 🌐 Embedding the Chatbot 
 
-The application uses a `.env` file to manage sensitive information such as API keys and URLs. Ensure you have the `dotenv` package installed to load these variables into your application.
+### Basic Integration
 
-## Flowise SDK Integration
+To embed the chatbot on any webpage, include the following script tag and custom element:
 
-The ToiBot chatbot uses the Flowise SDK to interact with the Flowise API. The SDK manages communication with the Flowise API, including session IDs to maintain context across multiple interactions.
+```html
+<!-- Basic usage (defaults to fullscreen) -->
+<script defer src="https://your-server-url/embed/toibot.js"></script>
+<toi-bot></toi-bot>
+```
 
-## Session ID Feature
+```html
+<!-- With customization -->
+<script defer src="https://your-server-url/embed/toibot.js"></script>
+<toi-bot
+  fullscreen="false"
+  hide-fullscreen-toggle="false"
+  welcome-message="Hello! How can I assist you today?"
+  custom-styles="
+    .chat-container { background: #f5f5f5; }
+    .message.bot { background: #e3f2fd; }
+    .message.user { background: #f5f5f5; }
+    /* Add more custom styles here */
+  "
+></toi-bot>
+```
 
-The session ID feature is essential for maintaining context in conversations. Each session is identified by a unique session ID, allowing the chatbot to remember previous interactions and provide more relevant responses. This feature is particularly useful for applications requiring continuity in user interactions.
+#### Available Attributes
 
-## Monitoring
+- **`fullscreen`**: Controls whether the chatbot opens in fullscreen mode
+  - `"true"` (default) - Opens in fullscreen
+  - `"false"` - Opens in boxed mode
+- **`hide-fullscreen-toggle`**: Controls visibility of the fullscreen toggle button
+  - `"true"` (default) - Hides the toggle
+  - `"false"` - Shows the toggle
+- **`welcome-message`**: Sets a custom welcome message for new chat sessions
+- **`custom-styles`**: Injects custom CSS to modify the chatbot's appearance
 
-You can monitor the chatbot's data flow directly in the terminal. When you start the server, the terminal will display real-time logs of the interactions, including received chunks and metadata. This feature helps in debugging and understanding the chatbot's behavior during conversations.
+## 🔧 Server File Configuration 
 
-![image](https://github.com/user-attachments/assets/e5823699-2f5a-42ca-a7d4-f5e41e66f06d)
+### System Override
 
+In `server.js`, you can customize the AI's behavior by modifying the `predictionConfig` object: (via `overrideConfig`)
 
-## Project Structure
+```javascript:server.js
+const predictionConfig = {
+  chatflowId: process.env.FLOWISE_CHATFLOW_ID,
+  question,
+  chatId: sessionId || uuidv4(),
+  streaming: true,
+  uploads: [],
+  overrideConfig: {
+    systemMessage: 'You are a helpful AI assistant. You are friendly and concise...'
+  }
+};
+```
 
-- `server.js`: The main server file that sets up the Express application and handles API requests.
-- `public/`: Contains static files served by the Express application, including HTML, CSS, and client-side JavaScript.
-- `package.json`: Lists the project dependencies and scripts.
+### Available Override Options
 
-## Dependencies
+The `overrideConfig` property accepts the following configurations:
 
-- `express`: Web framework for Node.js
-- `flowise-sdk`: SDK for interacting with the Flowise API
-- `node-fetch`: A lightweight module that brings `window.fetch` to Node.js
-- `readline`: Provides an interface for reading data from a Readable stream
-- `marked`: A markdown parser and compiler
-- `dotenv`: Loads environment variables from a `.env` file into `process.env`
+```javascript
+overrideConfig: {
+  systemMessage: 'Your system message here',
+  // Add other Flowise-supported configurations
+}
+```
 
-## License
+## ⚙️ Dynamic Configuration 
 
-This project is licensed under the [ISC License](https://opensource.org/license/isc-license-txt). Use it as you see fit.
+The chatbot now automatically adapts to your Flowise chatflow configuration:
+
+- **Upload Features**: Buttons for file and image uploads are dynamically shown/hidden based on your Flowise settings.
+- **Follow-up Prompts**: Can be enabled/disabled through Flowise configuration.
+
+## 🔒 Security Considerations 
+
+### API Protection Layer
+
+![capture_241104_125527](https://github.com/user-attachments/assets/53b6bf61-2257-4c5b-aa3c-42805ca42291)
+
+ToiBot implements a robust security architecture to protect sensitive information and prevent direct exposure of your Flowise infrastructure:
+
+- **Proxy Protection**: All API calls are routed through a secure backend proxy (`your-server-url/api/chat`), ensuring that sensitive endpoints and credentials are never exposed to the client side.
+- **Credential Isolation**: Flowise API keys, base URLs, and chatflow IDs remain strictly server-side, preventing exposure in client-side code or network requests.
+- **Request Validation**: All incoming requests are validated and sanitized before being forwarded to the Flowise API.
+
+### Network Architecture
+
+```plaintext
+Client Browser <-> ToiBot Server (Proxy) <-> Flowise API
+         [your-server-url/api/*]    [Your Flowise Instance]
+```
+
+This architecture ensures that:
+- Client-side code never directly accesses the Flowise API
+- API credentials remain secure on the server
+- All requests are properly authenticated and validated
+- Response data is sanitized before being sent to the client
+
+### Best Practices
+
+When deploying ToiBot:
+- Always use environment variables for sensitive credentials
+- Keep all dependencies updated to patch security vulnerabilities
+
+## ⚠️ Disclaimer 
+
+Users are encouraged to fork the project and adapt it to their specific needs and use cases. Please note that ongoing support or updates should not be expected.
+
+## License 📄
+
+This project is licensed under the [ISC License](https://opensource.org/license/isc-license-txt).

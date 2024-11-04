@@ -3,186 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chatbot</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>ToiBot by @toi500</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/custom.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
+  <script src="./embed/toibot-bridge.js"></script>
 </head>
 <body>
   <div class="chat-container">
-    <h1>Chatbot</h1>
-    <div id="chat-window"></div>
+    <div class="header">
+      <h1>ToiBot</h1>
+      <div class="header-buttons">
+        <button id="reset-chat" class="reset-button" title="Start new chat">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+          </svg>
+        </button>
+        <button id="fullscreen-toggle" class="header-button" title="Toggle fullscreen">
+          <svg class="fullscreen-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z"/>
+          </svg>
+          <svg class="exit-fullscreen-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed" style="display: none;">
+            <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div id="chat-window" class="drop-zone">
+      <div id="chat-window-content"></div>
+    </div>
     <div id="follow-up-prompts-container"></div>
+    <div id="attached-file-container"></div>
     <div class="input-area">
-      <input type="text" id="user-input" placeholder="Type your message here...">
-      <button onclick="sendMessage()" id="send-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256" stroke="currentColor" stroke-width="8" fill="none">
-          <path d="M229.89,117.43l-168-95.88A12,12,0,0,0,44.7,36l31.08,92L44.71,220A12,12,0,0,0,56,236a12.13,12.13,0,0,0,5.93-1.57l167.94-96.08a12,12,0,0,0,0-20.92Zm-4,14L58,227.47a4,4,0,0,1-5.72-4.83l0-.07L82.87,132H144a4,4,0,0,0,0-8H82.87L52.26,33.37A3.89,3.89,0,0,1,53.44,29,4.13,4.13,0,0,1,56,28a3.88,3.88,0,0,1,1.93.54l168,95.87a4,4,0,0,1,0,7Z"></path>
-        </svg>
-        <div class="spinner" style="display: none;"></div>
-      </button>
+      <div class="input-container">
+        <button id="image-upload-button" class="upload-button">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
+            <path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/>
+          </svg>
+        </button>
+        <button id="upload-button" class="upload-button">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
+            <path d="M640-520v-200h80v200h-80ZM440-244q-35-10-57.5-39T360-350v-370h80v476Zm30 164q-104 0-177-73t-73-177v-370q0-75 52.5-127.5T400-880q75 0 127.5 52.5T580-700v300h-80v-300q-1-42-29.5-71T400-800q-42 0-71 29t-29 71v370q-1 71 49 120.5T470-160q25 0 47.5-6.5T560-186v89q-21 8-43.5 12.5T470-80Zm170-40v-120H520v-80h120v-120h80v120h120v80H720v120h-80Z"/>
+          </svg>
+        </button>
+        <textarea id="user-input" placeholder="Type your question" rows="1"></textarea>
+        <button onclick="sendMessage()" id="send-button">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 -960 960 960" fill="currentColor">
+            <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z"/>
+          </svg>
+          <div class="spinner" style="display: none;"></div>
+        </button>
+      </div>
+      <input type="file" id="file-input" accept=".txt,.pdf,.doc,.docx,.csv,.json,.xml" style="display: none">
+      <input type="file" id="image-input" accept="image/*" style="display: none">
     </div>
   </div>
-
-  <script>
-    const chatWindow = document.getElementById('chat-window');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-    const buttonText = sendButton.querySelector('.button-text');
-    const spinner = sendButton.querySelector('.spinner');
-
-    function setButtonLoading(isLoading) {
-      const sendButton = document.getElementById('send-button');
-      const spinner = sendButton.querySelector('.spinner');
-      const icon = sendButton.querySelector('svg');
-      
-      sendButton.disabled = isLoading;
-      spinner.style.display = isLoading ? 'block' : 'none';
-      icon.style.display = isLoading ? 'none' : 'block';
-    }
-
-    function addMessage(sender, message) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-      
-      if (sender === 'bot') {
-        messageDiv.innerHTML = `
-          <div class="message-content"></div>
-          <div class="thinking">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-        `;
-        if (message) {
-          messageDiv.querySelector('.message-content').innerHTML = DOMPurify.sanitize(marked.parse(message));
-        }
-      } else {
-        messageDiv.textContent = message;
-      }
-      
-      chatWindow.appendChild(messageDiv);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function showThinkingAnimation() {
-      const lastBotMessage = document.querySelector('.message.bot:last-child');
-      if (lastBotMessage) {
-        const thinkingDiv = lastBotMessage.querySelector('.thinking');
-        if (thinkingDiv) {
-          thinkingDiv.style.display = 'flex';
-        }
-      } else {
-        addMessage('bot', '');
-        showThinkingAnimation();
-      }
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function hideThinkingAnimation() {
-      const lastBotMessage = document.querySelector('.message.bot:last-child');
-      if (lastBotMessage) {
-        const thinkingDiv = lastBotMessage.querySelector('.thinking');
-        if (thinkingDiv) {
-          thinkingDiv.style.display = 'none';
-        }
-      }
-    }
-
-    async function sendMessage() {
-      const message = userInput.value.trim();
-      if (message) {
-        addMessage('user', message);
-        userInput.value = '';
-        setButtonLoading(true);
-        showThinkingAnimation();
-
-        try {
-          const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ question: message }),
-          });
-
-          if (response.ok) {
-            const reader = response.body.getReader();
-            let botMessage = '';
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              const chunk = new TextDecoder().decode(value);
-              const lines = chunk.split('\n');
-              for (const line of lines) {
-                if (line.startsWith('data: ')) {
-                  const data = JSON.parse(line.slice(5));
-                  if (data.type === 'token') {
-                    if (botMessage === '') {
-                      hideThinkingAnimation();
-                    }
-                    botMessage += data.content;
-                    updateBotMessage(botMessage);
-                  } else if (data.type === 'metadata') {
-                    displayFollowUpPrompts(data.content.followUpPrompts);
-                  }
-                }
-              }
-            }
-          } else {
-            hideThinkingAnimation();
-            addMessage('bot', 'Sorry, there was an error processing your request.');
-          }
-        } catch (error) {
-          hideThinkingAnimation();
-          console.error('Error:', error);
-          addMessage('bot', 'Sorry, there was an error processing your request.');
-        } finally {
-          setButtonLoading(false);
-        }
-      }
-    }
-
-    function updateBotMessage(message) {
-      const lastBotMessage = document.querySelector('.message.bot:last-child');
-      if (lastBotMessage) {
-        const messageContent = lastBotMessage.querySelector('.message-content');
-        if (messageContent) {
-          messageContent.innerHTML = DOMPurify.sanitize(marked.parse(message));
-        }
-        const thinkingDiv = lastBotMessage.querySelector('.thinking');
-        if (thinkingDiv) {
-          thinkingDiv.style.display = 'none';
-        }
-      }
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function displayFollowUpPrompts(prompts) {
-      const promptsContainer = document.getElementById('follow-up-prompts-container');
-      promptsContainer.innerHTML = '';
-      
-      if (prompts.length > 0) {
-        const promptsDiv = document.createElement('div');
-        promptsDiv.className = 'follow-up-prompts';
-        prompts.forEach(prompt => {
-          const promptButton = document.createElement('button');
-          promptButton.textContent = prompt;
-          promptButton.addEventListener('click', () => {
-            userInput.value = prompt;
-            sendMessage();
-          });
-          promptsDiv.appendChild(promptButton);
-        });
-        promptsContainer.appendChild(promptsDiv);
-      }
-    }
-
-    userInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
-  </script>
+  <script src="./js/chatbot.js"></script>
 </body>
 </html>
